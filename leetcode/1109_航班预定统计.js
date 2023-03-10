@@ -1,4 +1,4 @@
-import { Difference } from "../差分数组工具类";
+import { Difference } from "./差分数组工具类";
 
 /**
  * @param {number[][]} bookings
