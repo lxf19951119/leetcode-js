@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Proxy响应式数据</title>
+</head>
+
+<body>
+	<script>
+		//存储副作用函数的桶
+		const bucket = new Set();
+
+		//原始数据
+		const data = {
+			count: 0,
+			text: "hello world!"
+		}
+
+		//对原始数据的代理
+		const obj = new Proxy(data, {
+			get(target, key) {
+				if (!activeEffect) return target[key];
+				
+				if (activeEffect) {
+					bucket.add(activeEffect);
+				}
+				return target[key];
+			},
+			set(target, key, newVal) {
+				target[key] = newVal;
+				bucket.forEach(fn => fn());
+				return true;
+			}
+		})
+
+		let activeEffect;
+		function effect(fn) {
+			activeEffect = fn;
+			fn();
+		}
+
+		effect(() => {
+			document.body.innerText = obj.text;
+		});
+
+	</script>
+</body>
+
+</html>

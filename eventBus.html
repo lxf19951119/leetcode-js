@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>eventBus</title>
+</head>
+
+<body>
+	<script>
+		//
+		class EventBus {
+			constructor() {
+				this.events = {};
+			}
+
+			//订阅事件
+			on(eventName, callback) {
+				this.events[eventName] = this.events[eventName] || [];
+				this.events[eventName].push(callback);
+			}
+
+			//发布事件
+			emit(eventName, data) {
+				if (this.events[eventName]) {
+					this.events[eventName].forEach(event => {
+						event(data)
+					});
+				}
+			}
+
+			//取消订阅
+			off(eventName, callback) {
+				if (this.events[eventName]) {
+					this.events[eventName] = this.events[eventName].filter(e => e !== callback)
+				}
+			}
+
+		}
+
+		function say(data) {
+			console.log(data)
+		}
+
+		const bus = new EventBus();
+		bus.on("say", say)
+
+
+		console.log(bus);
+	</script>
+
+</body>
+
+</html>
